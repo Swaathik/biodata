@@ -35,22 +35,40 @@ protocol VariantAnnotations {
 		Expression expression;
 		union { null, float } pvalue;
 	}
-	
-	record ConsequenceType { 
-		union { null, string } geneName;
-		union { null, string } ensemblGeneId; 
-		union { null, string } ensemblTranscriptId; 
-		union { null, string } strand; 
-		union { null, string } biotype; 
-		union { null, int } cDnaPosition; 
-		union { null, int } cdsPosition; 
-		union { null, int } aaPosition; 
-		union { null, string } aaChange; 
-		union { null, string } codon; 
-		union { null, string } functionalDescription; 		
+
+	record ProteinFeature {
+		union { null, string } id;
+		union { null, int } start;
+		union { null, int } end;
+		union { null, string } type;
+		union { null, string } description;
+		union { null, string } ref;
+	}
+
+	record ProteinVariantAnnotation {
+		union { null, string } uniprotAccession;
+		union { null, string } uniprotName;
+		union { null, int } position;
+		union { null, string } reference;
+		union { null, string } alternate;
+		union { null, string } uniprotVariantId;
+		union { null, string } functionalDescription;
 		union { null, array<Score> } proteinSubstitutionScores;
+		union { null, array<string> } keywords;
+		union { null, array<ProteinFeature> } features;
+	}
+
+	record ConsequenceType {
+		union { null, string } geneName;
+		union { null, string } ensemblGeneId;
+		union { null, string } ensemblTranscriptId;
+		union { null, string } strand;
+		union { null, string } biotype;
+		union { null, int } cDnaPosition;
+		union { null, int } cdsPosition;
+		union { null, string } codon;
+		union { null, string } functionalDescription;
 		union { null, array<ConsequenceTypeEntry> } soTerms;
-		union { null, array<ExpressionValue> } expressionValues;
 	}
 	
 	record PopulationFrequency { 
@@ -72,7 +90,46 @@ protocol VariantAnnotations {
 		union { null, float } rawScore;	
 	}
 	
-		
+	record GeneDrugInteraction  {
+		union { null, string } geneName;
+		union { null, string } drugName;
+		union { null, string } source;
+		union { null, string } studyType;
+		union { null, string } type;
+	}
+
+	record Cosmic {
+		union { null, string } mutationID;
+		union { null, string } primarySite;
+		union { null, string } primaryHistology;
+		union { null, string } histologySubtype;
+		union { null, string } sampleSource;
+		union { null, string } tumourOrigin;
+		union { null, string } geneName;
+		union { null, string } mutationSomaticStatus;
+	}
+
+	record Gwas {
+		union { null, string } snpIdCurrent;
+		union { null, array<string> } traits;
+		union { null, double } riskAlleleFrequency;
+		union { null, string } reportedGenes;
+	}
+
+	record Clinvar {
+		union { null, string } acc;
+		union { null, string } clinicalSignificance;
+		union { null, array<string> } traits;
+		union { null, array<string> } geneName;
+		union { null, string } reviewStatus;
+	}
+
+	record VariantTraitAssociation {
+		union { null, array<Cosmic> } cosmicList;
+		union { null, array<Gwas> } gwasList;
+		union { null, array<Clinvar> } clinvarList;
+	}
+
 	record VariantAnnotation { 
 		union { null, string } chromosome;
 		union { null, int } start;    
@@ -87,8 +144,9 @@ protocol VariantAnnotations {
 		union { null, array<PopulationFrequency> } populationFrequencies;
 		//union { null, array<CaddScore> } caddScore;
 		
-		union { null, map<array<string>> } geneDrugInteraction;
-		union { null, map<string> } variantTraitAssociation;
+		union { null, array<GeneDrugInteraction> } geneDrugInteraction;
+		union { null, array<ExpressionValue> } expressionValues;
+		union { null, map<VariantTraitAssociation> } variantTraitAssociation;
 		union { null, map<string> } additionalAttributes;
 	}
 

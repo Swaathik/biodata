@@ -22,6 +22,9 @@ import org.apache.avro.io.DatumReader;
 import org.apache.avro.io.DatumWriter;
 import org.apache.avro.specific.SpecificDatumReader;
 import org.apache.avro.specific.SpecificDatumWriter;
+import org.opencb.biodata.models.variant.annotation.*;
+import org.opencb.biodata.models.variant.annotation.GeneDrugInteraction;
+import org.opencb.biodata.models.variation.*;
 
 
 /**
@@ -265,42 +268,45 @@ public class VariantContextToVariantConverter {
 		List<ConsequenceType> consequenceTypeList = new ArrayList<>();
 		ConsequenceType consequenceType = new ConsequenceType();
 
-		consequenceType.setAaChange(null);
-		consequenceType.setAaPosition(null);
-		consequenceType.setBiotype(null);
-		consequenceType.setCDnaPosition(null);
-		consequenceType.setCdsPosition(null);
-		consequenceType.setCodon(null);
-		consequenceType.setEnsemblGeneId(null);
-		consequenceType.setEnsemblTranscriptId(null);
 		/*
-		 * set ExpressionValues list type parameter
+		 * set ProteinVariantAnnotation type parameter
 		 */
-		List<ExpressionValue> expressionValueList = new ArrayList<>();
-		ExpressionValue expressionValue = new ExpressionValue();
-		expressionValue.setExpression(getEnumFromString(
-				org.opencb.biodata.models.variant.avro.Expression.class, "UP"));
-		/*expressionValue.setExperimentalFactor(null);
-		expressionValue.setExperimentId(null);
-		expressionValue.setExpression(null);
-		expressionValue.setFactorValue(null);
-		expressionValue.setPvalue(null);
-		expressionValue.setTechnologyPlatform(null);*/
-		expressionValueList.add(expressionValue);
-		consequenceType.setExpressionValues(expressionValueList);
-
-		consequenceType.setFunctionalDescription(null);
-		consequenceType.setGeneName(null);		
-		/*
-		 * set ProteinSubstitutionScores list type parameter
-		 */
+		ProteinVariantAnnotation proteinVariantAnnotation = new ProteinVariantAnnotation();
 		List<Score> proteinSubstitutionScoreList = new ArrayList<>();
 		Score score = new Score();
 		score.setDescription(null);
 		score.setScore(null);
 		score.setSource(null);
 		proteinSubstitutionScoreList.add(score);
-		consequenceType.setProteinSubstitutionScores(proteinSubstitutionScoreList);		
+		List<ProteinFeature> proteinFeatureList = new ArrayList<>();
+		ProteinFeature proteinFeature = new ProteinFeature();
+		proteinFeature.setId(null);
+		proteinFeature.setStart(null);
+		proteinFeature.setEnd(null);
+		proteinFeature.setType(null);
+		proteinFeature.setDescription(null);
+		proteinFeature.setRef(null);
+		proteinFeatureList.add(proteinFeature);
+		proteinVariantAnnotation.setUniprotAccession(null);
+		proteinVariantAnnotation.setUniprotName(null);
+		proteinVariantAnnotation.setPosition(-1);
+		proteinVariantAnnotation.setReference(null);
+		proteinVariantAnnotation.setAlternate(null);
+		proteinVariantAnnotation.setUniprotVariantId(null);
+		proteinVariantAnnotation.setFunctionalDescription(null);
+		//ProteinVariantAnnotation.setProteinSubstitutionScores(proteinSubstitutionScoreList);
+		proteinVariantAnnotation.setKeywords(null);
+		proteinVariantAnnotation.setFeatures(null);
+		proteinVariantAnnotation.setFeatures(proteinFeatureList);
+
+		consequenceType.setBiotype(null);
+		consequenceType.setCDnaPosition(null);
+		consequenceType.setCdsPosition(null);
+		consequenceType.setCodon(null);
+		consequenceType.setEnsemblGeneId(null);
+		consequenceType.setEnsemblTranscriptId(null);
+		consequenceType.setGeneName(null);
+		// TODO: consequenceType.setProteinVariantAnnotation(proteinVariantAnnotation);
 		/*
 		 * set SoTerms list type parameter
 		 */
@@ -376,7 +382,7 @@ public class VariantContextToVariantConverter {
 		/*
 		 * set Clinical map type parameter
 		 */
-		Map<CharSequence, CharSequence> clinicalMap = new HashMap<>();
+		Map<CharSequence, VariantTraitAssociation> clinicalMap = new HashMap<>();
 		//clinicalMap.put(null, null);
 		variantAnnotation.setVariantTraitAssociation(clinicalMap);
 		/*
@@ -394,15 +400,31 @@ public class VariantContextToVariantConverter {
 		conservationScoreList.add(score);
 		variantAnnotation.setConservation(conservationScoreList);
 
+		/*
+		 * set ExpressionValues list type parameter
+		 */
+		List<ExpressionValue> expressionValueList = new ArrayList<>();
+		ExpressionValue expressionValue = new ExpressionValue();
+		expressionValue.setExpression(getEnumFromString(
+				org.opencb.biodata.models.variant.avro.Expression.class, "UP"));
+		/*expressionValue.setExperimentalFactor(null);
+		expressionValue.setExperimentId(null);
+		expressionValue.setExpression(null);
+		expressionValue.setFactorValue(null);
+		expressionValue.setPvalue(null);
+		expressionValue.setTechnologyPlatform(null);*/
+		expressionValueList.add(expressionValue);
+		variantAnnotation.setExpressionValues(expressionValueList);
+
 		variantAnnotation.setEnd(0);		
 		/*
 		 * set GeneDrugInteraction map of list type parameter
 		 */
 		Map<CharSequence, List<CharSequence>> geneDrugInteractionMap = new HashMap<>();
-		List<CharSequence> geneDrugInteractionList = new ArrayList<>();
+		List<GeneDrugInteraction> geneDrugInteractionList = new ArrayList<>();
 		//geneDrugInteractionList.add("AAA");
 		//geneDrugInteractionMap.put("000", geneDrugInteractionList);		
-		variantAnnotation.setGeneDrugInteraction(geneDrugInteractionMap);		
+		// FIXME: variantAnnotation.setGeneDrugInteraction(geneDrugInteractionList);
 		/*
 		 * set Hgvs list type parameter
 		 */
