@@ -18,6 +18,7 @@ package org.opencb.biodata.models.core;
 
 import org.opencb.biodata.models.variant.avro.Expression;
 import org.opencb.biodata.models.variant.avro.GeneDrugInteraction;
+import org.opencb.biodata.models.variant.avro.GeneTraitAssociation;
 
 import java.util.List;
 
@@ -26,7 +27,50 @@ import java.util.List;
  */
 public class GeneAnnotation {
 
-    private List<Expression> expressionValues;
-    private List<GeneDrugInteraction> drugInteractions;
+    private List<Expression> expression;
+    private List<GeneTraitAssociation> diseases;
+    private List<GeneDrugInteraction> drugs;
 
+    public GeneAnnotation() {
+    }
+
+    public GeneAnnotation(List<Expression> expression, List<GeneTraitAssociation> diseases, List<GeneDrugInteraction> drugs) {
+        this.expression = expression;
+        this.diseases = diseases;
+        this.drugs = drugs;
+    }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("GeneAnnotation{");
+        sb.append("expression=").append(expression);
+        sb.append(", diseases=").append(diseases);
+        sb.append(", drugs=").append(drugs);
+        sb.append('}');
+        return sb.toString();
+    }
+
+    public List<Expression> getExpression() {
+        return expression;
+    }
+
+    public void setExpression(List<Expression> expression) {
+        this.expression = expression;
+    }
+
+    public List<GeneTraitAssociation> getDiseases() {
+        return diseases;
+    }
+
+    public void setDiseases(List<GeneTraitAssociation> diseases) {
+        this.diseases = diseases;
+    }
+
+    public List<GeneDrugInteraction> getDrugs() {
+        return drugs;
+    }
+
+    public void setDrugs(List<GeneDrugInteraction> drugs) {
+        this.drugs = drugs;
+    }
 }
