@@ -20,7 +20,9 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.opencb.biodata.models.variant.avro.VariantAnnotation;
 import org.opencb.biodata.models.variant.avro.VariantAvro;
 import org.opencb.biodata.models.variant.avro.VariantType;
+import org.opencb.biodata.models.variant.protobuf.VariantProto;
 
+import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -29,7 +31,7 @@ import java.util.stream.Collectors;
  * @author Cristina Yenyxe Gonzalez Garcia &lt;cyenyxe@ebi.ac.uk&gt;
  */
 @JsonIgnoreProperties({"impl", "id", "sourceEntries", "studiesMap"})
-public class Variant {
+public class Variant implements Serializable {
 
     private final VariantAvro impl;
     private Map<String, StudyEntry> studyEntries = null;
@@ -109,14 +111,17 @@ public class Variant {
     }
 
     private void resetType() {
-        if (getReference().length() == getAlternate().length()) {
-            if (getLength() > 1) {
-                setType(VariantType.MNV);
+        setType(inferType(getReference(), getAlternate(), getLength()));
+    }
+    public static VariantType inferType(String reference, String alternate, Integer length) {
+        if (reference.length() == alternate.length()) {
+            if (length > 1) {
+                return VariantType.MNV;
             } else {
-                setType(VariantType.SNV);
+                return VariantType.SNV;
             }
         } else {
-            if (getLength() <= SV_THRESHOLD) {
+            if (length <= SV_THRESHOLD) {
             /*
             * 3 possibilities for being an INDEL:
             * - The value of the ALT field is <DEL> or <INS>
@@ -124,9 +129,9 @@ public class Variant {
             * - The REF allele is . but the ALT is not
             * - The REF field length is different than the ALT field length
             */
-                setType(VariantType.INDEL);
+                return VariantType.INDEL;
             } else {
-                setType(VariantType.SV);
+                return VariantType.SV;
             }
         }
     }
@@ -335,12 +340,12 @@ public class Variant {
         return null;
     }
 
-    public void addStudyEntry(StudyEntry sourceEntry) {
+    public void addStudyEntry(StudyEntry studyEntry) {
         if (studyEntries == null) {
             studyEntries = new HashMap<>();
         }
-        this.studyEntries.put(composeId(sourceEntry.getStudyId()), sourceEntry);
-        impl.getStudies().add(sourceEntry.getImpl());
+        this.studyEntries.put(composeId(studyEntry.getStudyId()), studyEntry);
+        impl.getStudies().add(studyEntry.getImpl());
     }
 
     public Iterable<String> getSampleNames(String studyId, String fileId) {

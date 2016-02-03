@@ -30,6 +30,7 @@ import org.opencb.biodata.models.variant.stats.VariantStats;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -40,7 +41,7 @@ import static org.opencb.biodata.models.variant.StudyEntry.isSamplesPositionMapS
  * @author Pawan Pal & Kalyan
  *
  */
-public class VariantContextToVariantConverter implements Converter<VariantContext, Variant> {
+public class VariantContextToVariantConverter implements Converter<VariantContext, Variant>, Serializable {
 
     private final String studyId;
     private final String fileId;
@@ -205,7 +206,7 @@ public class VariantContextToVariantConverter implements Converter<VariantContex
             alternates.add(allele);
             secondaryAlternateList.add(allele);
         }
-        studyEntry.setSecondaryAlternates(secondaryAlternateList);
+        studyEntry.setSecondaryAlternatesAlleles(secondaryAlternateList);
 
 
         // set variant format
