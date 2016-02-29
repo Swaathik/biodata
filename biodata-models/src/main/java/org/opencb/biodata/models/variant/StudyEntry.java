@@ -164,9 +164,8 @@ public class StudyEntry implements Serializable {
 //        impl.setSecondaryAlternates(Arrays.asList(secondaryAlternates));
 //    }
 
-    @Deprecated
     public String getFormatAsString() {
-        return getFormat().stream().collect(Collectors.joining(":"));
+        return impl.getFormat() == null ? null : String.join(":", impl.getFormat());
     }
 
     public void setFormatAsString(String format) {
@@ -233,7 +232,9 @@ public class StudyEntry implements Serializable {
         if (samplesPosition.containsKey(sampleName)) {
             Map<String, Integer> formatPositions = getFormatPositions();
             if (formatPositions.containsKey(field)) {
-                return impl.getSamplesData().get(samplesPosition.get(sampleName)).get(formatPositions.get(field));
+                List<String> sampleData = impl.getSamplesData().get(samplesPosition.get(sampleName));
+                Integer formatIdx = formatPositions.get(field);
+                return  formatIdx < sampleData.size() ? sampleData.get(formatIdx) : null;
             }
         }
         return null;
@@ -315,7 +316,7 @@ public class StudyEntry implements Serializable {
 
         if (formatIdx != null && samplePosition != null) {
             List<String> sampleData = getSamplesData().get(samplePosition);
-            if (sampleData.size() < formatIdx) {
+            if (formatIdx < sampleData.size()) {
                 sampleData.set(formatIdx, value);
             } else {
                 List<String> modifiableSampleData = new ArrayList<>(getFormat().size());
